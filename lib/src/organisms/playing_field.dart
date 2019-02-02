@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../molecules/score_display.dart';
 
 class PlayingField extends StatelessWidget {
   @override
@@ -7,9 +8,7 @@ class PlayingField extends StatelessWidget {
       alignment: Alignment(0, 0),
       child: Stack(
         children: <Widget>[
-          Positioned(
-            child: Text('200'),
-          )
+          ScoreDisplay(),
         ],
       ),
     );
