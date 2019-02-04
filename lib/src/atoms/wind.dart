@@ -50,7 +50,7 @@ class _WindState extends State<Wind>
           builder: (context, child){
             return Image.asset(
               windAssets[windAnimation.value.round()],
-              scale: 4.0,
+              scale: 3.0,
               repeat: ImageRepeat.repeatX,
               width: widget.size.width,
               alignment: Alignment.bottomCenter,
