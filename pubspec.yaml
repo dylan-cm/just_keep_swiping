@@ -37,6 +37,12 @@ flutter:
     - assets/run_right.png
     - assets/wet_grass.png
     - assets/wet_grass_tile.png
+    - assets/wind1.png
+    - assets/wind2.png
+    - assets/wind3.png
+    - assets/wind4.png
+    - assets/wind5.png
+    - assets/wind6.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

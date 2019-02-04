@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../molecules/score_display.dart';
 import '../molecules/high_score_display.dart';
+import '../atoms/wind.dart';
 
 class PlayingField extends StatefulWidget {
   _PlayingFieldState createState() => _PlayingFieldState();
@@ -21,7 +22,7 @@ class _PlayingFieldState extends State<PlayingField>
   void initState() {
     score = 0.0;
     highScore = 0.0; //TODO: load highscore from db
-    difficulty = 0.52; //TODO: Tune difficulty 0.1 is easy mode for dev
+    difficulty = 0.1; //TODO: Tune difficulty 0.1 is easy mode for dev
 
     scoreReducerController = AnimationController(
       duration: Duration(
@@ -66,7 +67,8 @@ class _PlayingFieldState extends State<PlayingField>
                 return ScoreDisplay(score);
               }
             ),
-            HighScoreDisplay(highScore: highScore)
+            HighScoreDisplay(highScore: highScore),
+            Wind(size),
           ],
         ),
       ),
@@ -81,12 +83,16 @@ class _PlayingFieldState extends State<PlayingField>
 
   void _onDrag(DragUpdateDetails details){
     double punishment = score + details.delta.dy/((difficulty*10).round());
-    double newScore = score + details.delta.dy/(math.pow(score, difficulty) + 1);
+    double newScore = score + _applyDifficulty(details.delta.dy);
     if(newScore >= score) setState(() => score = newScore);
     else if(punishment >= 0) setState(()=> score = punishment);
     else setState(()=> score = 0);
 
     if(score > highScore) setState(()=> highScore = score);
+  }
+
+  double _applyDifficulty(double dy){
+    return dy/(math.pow(score, difficulty) + 1);
   }
 
   void _youLose(){
