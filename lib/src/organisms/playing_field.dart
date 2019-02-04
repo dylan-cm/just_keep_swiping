@@ -1,6 +1,7 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../molecules/score_display.dart';
-import 'dart:math' as math;
+import '../molecules/high_score_display.dart';
 
 class PlayingField extends StatefulWidget {
   _PlayingFieldState createState() => _PlayingFieldState();
@@ -13,12 +14,14 @@ class _PlayingFieldState extends State<PlayingField>
   AnimationController scoreReducerController;
 
   double score;
+  double highScore;
   double difficulty;
 
   @override
   void initState() {
     score = 0.0;
-    difficulty = 0.8; //TODO: Tune difficulty 0.1 is easy mode for dev
+    highScore = 0.0; //TODO: load highscore from db
+    difficulty = 0.52; //TODO: Tune difficulty 0.1 is easy mode for dev
 
     scoreReducerController = AnimationController(
       duration: Duration(
@@ -45,20 +48,25 @@ class _PlayingFieldState extends State<PlayingField>
       onVerticalDragUpdate: (details) => _onDrag(details),
       onVerticalDragEnd: (details) => _liftFinger(details),
       child: Container(
-        alignment: AlignmentDirectional.center,
-        width: size.width,
-        height: size.height,
-        color: Colors.yellow,
+        color: Colors.black,
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: <Widget>[
+            Image.asset(
+              'assets/wet_grass_tile.png',
+              scale: 3.0,
+              width: size.width,
+              height: size.height,
+              repeat: ImageRepeat.repeat,
+              ),
             AnimatedBuilder(
               animation: scoreReducer,
               builder: (conext, child){
                 score *= scoreReducer.value;
                 return ScoreDisplay(score);
               }
-            )
+            ),
+            HighScoreDisplay(highScore: highScore)
           ],
         ),
       ),
@@ -77,9 +85,12 @@ class _PlayingFieldState extends State<PlayingField>
     if(newScore >= score) setState(() => score = newScore);
     else if(punishment >= 0) setState(()=> score = punishment);
     else setState(()=> score = 0);
+
+    if(score > highScore) setState(()=> highScore = score);
   }
 
   void _youLose(){
     scoreReducerController.forward();
+    //TODO: Store highScore to db
   }
 }
