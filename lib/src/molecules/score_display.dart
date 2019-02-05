@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
+import 'dart:math' as math;
 
 class ScoreDisplay extends StatelessWidget {
   final double score;
@@ -17,9 +17,12 @@ class ScoreDisplay extends StatelessWidget {
          Column(
           children: <Widget>[
             Text('${(score*100).round()}',
-              style: TextStyle(fontSize: 44, color: Colors.white),
+              style: TextStyle(
+                fontSize: math.max(score/10, 16), 
+                color: Colors.white
+              ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 10),
             SizedBox(
               width: size,
               height: size,
