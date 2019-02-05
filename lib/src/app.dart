@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/game.dart';
+import 'pages/game.dart';
 
 class App extends StatelessWidget {
   @override
