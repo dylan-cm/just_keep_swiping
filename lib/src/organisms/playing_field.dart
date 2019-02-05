@@ -22,11 +22,11 @@ class _PlayingFieldState extends State<PlayingField>
   void initState() {
     score = 0.0;
     highScore = 0.0; //TODO: load highscore from db
-    difficulty = 0.1; //TODO: Tune difficulty 0.1 is easy mode for dev
+    difficulty = 1; //TODO: move into level object
 
     scoreReducerController = AnimationController(
       duration: Duration(
-        milliseconds: math.max( (400 - difficulty*300).round(), 50 ) 
+        milliseconds: math.max( (1000 - difficulty*20).round(), 50 ) 
       ),
       vsync: this
     );
@@ -82,7 +82,7 @@ class _PlayingFieldState extends State<PlayingField>
   }
 
   void _onDrag(DragUpdateDetails details){
-    double punishment = score + details.delta.dy/((difficulty*10).round());
+    double punishment = score + details.delta.dy;
     double newScore = score + _applyDifficulty(details.delta.dy);
     if(newScore >= score) setState(() => score = newScore);
     else if(punishment >= 0) setState(()=> score = punishment);
@@ -92,7 +92,9 @@ class _PlayingFieldState extends State<PlayingField>
   }
 
   double _applyDifficulty(double dy){
-    return dy/(math.pow(score, difficulty) + 1);
+    var power = 0.5 + difficulty/100;
+    double result = dy/(math.pow(score, power) + 1);
+    return result;
   }
 
   void _youLose(){
