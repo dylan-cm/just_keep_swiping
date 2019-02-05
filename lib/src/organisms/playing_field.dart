@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../molecules/score_display.dart';
 import '../molecules/high_score_display.dart';
 import '../atoms/wind.dart';
+import '../atoms/score_bloc.dart';
+import '../atoms/bloc_provider.dart';
 
 class PlayingField extends StatefulWidget {
   final int difficulty;
@@ -44,11 +46,12 @@ class _PlayingFieldState extends State<PlayingField>{
   
   @override
   Widget build(BuildContext context) {
+    final scoreBloc = BlocProvider.of<ScoreBloc>(context);
     Size size = MediaQuery.of(context).size;
 
     return GestureDetector(
       onVerticalDragStart:(details) => _placeFinger(details),
-      onVerticalDragUpdate: (details) => _onDrag(details),
+      onVerticalDragUpdate: (details) => _onDrag(scoreBloc, details),
       onVerticalDragEnd: (details) => _liftFinger(details),
       child: Container(
         color: Colors.black,
@@ -65,11 +68,13 @@ class _PlayingFieldState extends State<PlayingField>{
             AnimatedBuilder(
               animation: scoreReducer,
               builder: (conext, child){
+                if (score <= 0.01) scoreBloc.setScore(0.0); //Don't wait for animation to end
+                else scoreBloc.setScore(score);
+
                 score *= scoreReducer.value;
                 return ScoreDisplay(score);
               }
             ),
-            HighScoreDisplay(highScore: highScore),
             Wind(size, widget.ticker),
           ],
         ),
@@ -83,14 +88,16 @@ class _PlayingFieldState extends State<PlayingField>{
     scoreReducerController.reset();
   }
 
-  void _onDrag(DragUpdateDetails details){
+  void _onDrag(ScoreBloc scoreBloc, DragUpdateDetails details){ //TODO: move logic into BLOC?
+    scoreBloc.setScore(score);
+
     double punishment = score + details.delta.dy;
     double newScore = score + _applyDifficulty(details.delta.dy);
     if(newScore >= score) setState(() => score = newScore);
     else if(punishment >= 0) setState(()=> score = punishment);
     else setState(()=> score = 0);
 
-    if(score > highScore) setState(()=> highScore = score);
+    if(score > highScore) scoreBloc.setHighScore(widget.difficulty, score);
   }
 
   double _applyDifficulty(double dy){
