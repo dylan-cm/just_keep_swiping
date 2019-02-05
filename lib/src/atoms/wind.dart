@@ -45,7 +45,7 @@ class _WindState extends State<Wind>{
     return Positioned(
       bottom: 0,
       child: Opacity(
-        opacity: .75,
+        opacity: .5,
         child: AnimatedBuilder(
           animation: windAnimation,
           builder: (context, child){

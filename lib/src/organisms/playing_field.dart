@@ -1,16 +1,16 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../molecules/score_display.dart';
-import '../molecules/high_score_display.dart';
+import '../atoms/background.dart';
 import '../atoms/wind.dart';
 import '../atoms/score_bloc.dart';
 import '../atoms/bloc_provider.dart';
 
 class PlayingField extends StatefulWidget {
-  final int difficulty;
+  final int level;
   final TickerProvider ticker;
 
-  PlayingField({this.difficulty : 1, this.ticker});
+  PlayingField({this.level : 1, this.ticker});
 
   _PlayingFieldState createState() => _PlayingFieldState();
 }
@@ -32,7 +32,7 @@ class _PlayingFieldState extends State<PlayingField>{
     
     scoreReducerController = AnimationController(
       duration: Duration(
-        milliseconds: math.max( (1000 - widget.difficulty*20).round(), 50 ) 
+        milliseconds: math.max( (1000 - widget.level*20).round(), 50 ) 
       ),
       vsync: widget.ticker
     );
@@ -60,19 +60,14 @@ class _PlayingFieldState extends State<PlayingField>{
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: <Widget>[
-            Image.asset(
-              'assets/wet_grass_tile.png',
-              scale: 3.0,
-              width: size.width,
-              height: size.height,
-              repeat: ImageRepeat.repeat,
-              ),
+            Background(size: size, level: widget.level,),
             AnimatedBuilder(
               animation: scoreReducer,
               builder: (conext, child){
-                if (score <= 0.01) scoreBloc.setScore(0.0); //Don't wait for animation to end
+                if (score <= 0.01) scoreBloc.setScore(0.0); 
                 else scoreBloc.setScore(score);
-
+                //Don't wait for animation to end to update score to 0
+                //to avoid jank with sliding to next level
                 score *= scoreReducer.value;
                 return ScoreDisplay(score, falling: falling,);
               }
@@ -100,11 +95,11 @@ class _PlayingFieldState extends State<PlayingField>{
     else if(punishment >= 0) setState(()=> score = punishment);
     else setState(()=> score = 0);
 
-    if(score > highScore) scoreBloc.setHighScore(widget.difficulty, score);
+    if(score > highScore) scoreBloc.setHighScore(widget.level, score);
   }
 
   double _applyDifficulty(double dy){
-    var power = 0.5 + widget.difficulty/100;
+    var power = 0.5 + widget.level/100;
     double result = dy/(math.pow(score, power) + 1);
     return result;
   }

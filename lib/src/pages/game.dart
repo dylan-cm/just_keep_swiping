@@ -38,7 +38,7 @@ class _GameState extends State<Game>
         children: <Widget>[
           PlayingField(
             ticker: this,
-            difficulty: level
+            level: level
           ),
           Hud(level: level),
         ],
