@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'color_shifter.dart';
 
 class Wind extends StatefulWidget {
   final Size size;
   final TickerProvider ticker;
+  final int level;
 
-  Wind(this.size, this.ticker);
+  Wind(this.size, this.ticker, this.level);
   _WindState createState() => _WindState();
 }
 
@@ -55,6 +57,9 @@ class _WindState extends State<Wind>{
               repeat: ImageRepeat.repeatX,
               width: widget.size.width,
               alignment: Alignment.bottomCenter,
+              //color: ColorShifter(widget.level-2).color,
+              //colorBlendMode: ColorShifter(widget.level-3).blendMode,
+              // color: Colors.transparent,
               );
           },
         )

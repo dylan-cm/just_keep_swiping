@@ -56,11 +56,12 @@ class _PlayingFieldState extends State<PlayingField>{
       onVerticalDragUpdate: (details) => _onDrag(scoreBloc, details),
       onVerticalDragEnd: (details) => _liftFinger(details),
       child: Container(
-        color: Colors.black,
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: <Widget>[
             Background(size: size, level: widget.level,),
+            
+            Wind(size, widget.ticker, widget.level),
             AnimatedBuilder(
               animation: scoreReducer,
               builder: (conext, child){
@@ -72,7 +73,6 @@ class _PlayingFieldState extends State<PlayingField>{
                 return ScoreDisplay(score, falling: falling,);
               }
             ),
-            Wind(size, widget.ticker),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'color_shifter.dart';
 
 class Background extends StatelessWidget {
   final Size size;
@@ -31,6 +32,8 @@ class Background extends StatelessWidget {
       width: size.width,
       height: size.height,
       repeat: ImageRepeat.repeat,
+      colorBlendMode: ColorShifter(level).blendMode,
+      color: ColorShifter(level).color,
     );
     
     
