@@ -5,8 +5,9 @@ class ScoreDisplay extends StatelessWidget {
   final double score;
   final double stride;
   final double size;
+  final bool falling;
 
-  ScoreDisplay(this.score, {this.stride : 4, this.size : 60});
+  ScoreDisplay(this.score, {this.stride : 4, this.size : 80, this.falling : false});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,14 @@ class ScoreDisplay extends StatelessWidget {
           children: <Widget>[
             Text('${(score*100).round()}',
               style: TextStyle(
-                fontSize: math.max(score/10, 16), 
+                fontSize: math.max(score/8, 16), 
                 color: Colors.white
               ),
             ),
             SizedBox(height: 10),
             SizedBox(
-              width: size,
-              height: size,
+              width: math.min(size/2 + score/10, size),
+              height: math.min(size/2 + score/10, size),
               child: buildMan(score, stride),  
             )
           ],
@@ -35,7 +36,8 @@ class ScoreDisplay extends StatelessWidget {
   }
 
   Widget buildMan(double distance, double stride){
-    if( (distance%stride) > (stride/2) ) return Image.asset('assets/run_left.png');
+    if (falling) return Image.asset('assets/falling.png');
+    else if( (distance%stride) > (stride/2) ) return Image.asset('assets/run_left.png');
     else return Image.asset('assets/run_right.png');
   }
 }

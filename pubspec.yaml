@@ -35,6 +35,7 @@ flutter:
   assets: 
     - assets/run_left.png
     - assets/run_right.png
+    - assets/falling.png
     - assets/wet_grass.png
     - assets/wet_grass_tile.png
     - assets/wind1.png

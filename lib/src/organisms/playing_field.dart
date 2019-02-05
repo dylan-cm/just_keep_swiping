@@ -22,11 +22,13 @@ class _PlayingFieldState extends State<PlayingField>{
 
   double score;
   double highScore;
+  bool falling;
 
   @override
   void initState() {
     score = 0.0;
     highScore = 0.0; //TODO: load highscore from db
+    falling = false;
     
     scoreReducerController = AnimationController(
       duration: Duration(
@@ -72,7 +74,7 @@ class _PlayingFieldState extends State<PlayingField>{
                 else scoreBloc.setScore(score);
 
                 score *= scoreReducer.value;
-                return ScoreDisplay(score);
+                return ScoreDisplay(score, falling: falling,);
               }
             ),
             Wind(size, widget.ticker),
@@ -85,6 +87,7 @@ class _PlayingFieldState extends State<PlayingField>{
   void _liftFinger(DragEndDetails details) => _youLose();
 
   void _placeFinger(DragStartDetails details){
+    setState(()=>falling=false);
     scoreReducerController.reset();
   }
 
@@ -107,6 +110,7 @@ class _PlayingFieldState extends State<PlayingField>{
   }
 
   void _youLose(){
+    setState(()=>falling=true);
     scoreReducerController.forward();
     //TODO: Store highScore to db
   }
