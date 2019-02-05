@@ -47,7 +47,7 @@ class _WindState extends State<Wind>{
     return Positioned(
       bottom: 0,
       child: Opacity(
-        opacity: .5,
+        opacity: 0.5,
         child: AnimatedBuilder(
           animation: windAnimation,
           builder: (context, child){
@@ -57,10 +57,38 @@ class _WindState extends State<Wind>{
               repeat: ImageRepeat.repeatX,
               width: widget.size.width,
               alignment: Alignment.bottomCenter,
-              //color: ColorShifter(widget.level-2).color,
-              //colorBlendMode: ColorShifter(widget.level-3).blendMode,
-              // color: Colors.transparent,
+              color: ColorShifter(widget.level-2).color.withOpacity(0.25),
+              colorBlendMode: BlendMode.srcATop,
               );
+            // return Stack(
+            //   children: <Widget>[
+            //     Container(
+            //       decoration: BoxDecoration(
+            //         color: Colors.transparent,
+            //         image: DecorationImage(
+            //           fit: BoxFit.fill,
+            //           image: AssetImage(windAssets[windAnimation.value.round()]),
+            //         ),
+            //       ),
+            //       height: 350.0,
+            //     ),
+            //     Container(
+            //       height: 350.0,
+            //       decoration: BoxDecoration(
+            //         color: Colors.white,
+            //         gradient: LinearGradient(
+            //           begin: FractionalOffset.topCenter,
+            //           end: FractionalOffset.bottomCenter,
+            //           colors: [
+            //             Colors.grey,
+            //             Colors.black,
+            //           ],
+            //           stops: [0.0,1.0]
+            //           )
+            //         ),
+            //       )
+            //     ]
+            //   );
           },
         )
       )

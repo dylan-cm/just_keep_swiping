@@ -60,8 +60,6 @@ class _PlayingFieldState extends State<PlayingField>{
           alignment: AlignmentDirectional.center,
           children: <Widget>[
             Background(size: size, level: widget.level,),
-            
-            Wind(size, widget.ticker, widget.level),
             AnimatedBuilder(
               animation: scoreReducer,
               builder: (conext, child){
@@ -73,6 +71,7 @@ class _PlayingFieldState extends State<PlayingField>{
                 return ScoreDisplay(score, falling: falling,);
               }
             ),
+            Wind(size, widget.ticker, widget.level),
           ],
         ),
       ),
