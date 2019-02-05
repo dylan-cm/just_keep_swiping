@@ -5,30 +5,32 @@ import '../molecules/high_score_display.dart';
 import '../atoms/wind.dart';
 
 class PlayingField extends StatefulWidget {
+  final int difficulty;
+  final TickerProvider ticker;
+
+  PlayingField({this.difficulty : 1, this.ticker});
+
   _PlayingFieldState createState() => _PlayingFieldState();
 }
 
-class _PlayingFieldState extends State<PlayingField>
-  with TickerProviderStateMixin{
+class _PlayingFieldState extends State<PlayingField>{
 
   Animation<double> scoreReducer;
   AnimationController scoreReducerController;
 
   double score;
   double highScore;
-  double difficulty;
 
   @override
   void initState() {
     score = 0.0;
     highScore = 0.0; //TODO: load highscore from db
-    difficulty = 1; //TODO: move into level object
-
+    
     scoreReducerController = AnimationController(
       duration: Duration(
-        milliseconds: math.max( (1000 - difficulty*20).round(), 50 ) 
+        milliseconds: math.max( (1000 - widget.difficulty*20).round(), 50 ) 
       ),
-      vsync: this
+      vsync: widget.ticker
     );
     scoreReducer = Tween(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
@@ -68,7 +70,7 @@ class _PlayingFieldState extends State<PlayingField>
               }
             ),
             HighScoreDisplay(highScore: highScore),
-            Wind(size),
+            Wind(size, widget.ticker),
           ],
         ),
       ),
@@ -92,7 +94,7 @@ class _PlayingFieldState extends State<PlayingField>
   }
 
   double _applyDifficulty(double dy){
-    var power = 0.5 + difficulty/100;
+    var power = 0.5 + widget.difficulty/100;
     double result = dy/(math.pow(score, power) + 1);
     return result;
   }

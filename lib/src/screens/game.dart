@@ -5,11 +5,25 @@ class Game extends StatefulWidget {
   _GameState createState() => _GameState();
 }
 
-class _GameState extends State<Game> {
+class _GameState extends State<Game> 
+  with TickerProviderStateMixin{
+
   @override
   Widget build(BuildContext context) {
+    return PageView.builder(
+      itemCount: 100,
+      itemBuilder: (context, index){
+        return _buildLevel(index);
+      },
+    );
+  }
+
+  Widget _buildLevel(int difficulty){
     return Scaffold(
-       body: PlayingField(),
+       body: PlayingField(
+         ticker: this,
+         difficulty: difficulty
+       ),
     );
   }
 }

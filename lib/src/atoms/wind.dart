@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class Wind extends StatefulWidget {
   final Size size;
-  Wind(this.size);
+  final TickerProvider ticker;
+
+  Wind(this.size, this.ticker);
   _WindState createState() => _WindState();
 }
 
-class _WindState extends State<Wind> 
-  with TickerProviderStateMixin{
+class _WindState extends State<Wind>{
 
   Animation<double> windAnimation;
   AnimationController windController;
@@ -18,15 +19,15 @@ class _WindState extends State<Wind>
     windAssets = [
       'assets/wind1.png',
       'assets/wind4.png',
-      'assets/wind2.png',
       'assets/wind5.png',
+      'assets/wind2.png',
       'assets/wind3.png',
       'assets/wind6.png',
     ];
 
     windController = AnimationController(
       duration: Duration(milliseconds: 300),
-      vsync: this
+      vsync: widget.ticker
     );
 
     windAnimation = Tween(begin: -0.4, end: 5.4).animate(
