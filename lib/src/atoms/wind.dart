@@ -5,8 +5,9 @@ class Wind extends StatefulWidget {
   final Size size;
   final TickerProvider ticker;
   final int level;
+  final double score;
 
-  Wind(this.size, this.ticker, this.level);
+  Wind(this.size, this.ticker, this.level, this.score);
   _WindState createState() => _WindState();
 }
 
@@ -51,6 +52,7 @@ class _WindState extends State<Wind>{
         child: AnimatedBuilder(
           animation: windAnimation,
           builder: (context, child){
+            if(widget.score >= 600) return Container();
             return Image.asset(
               windAssets[windAnimation.value.round()],
               scale: 3.0,
@@ -59,36 +61,7 @@ class _WindState extends State<Wind>{
               alignment: Alignment.bottomCenter,
               color: ColorShifter(widget.level-2).color.withOpacity(0.25),
               colorBlendMode: BlendMode.srcATop,
-              );
-            // return Stack(
-            //   children: <Widget>[
-            //     Container(
-            //       decoration: BoxDecoration(
-            //         color: Colors.transparent,
-            //         image: DecorationImage(
-            //           fit: BoxFit.fill,
-            //           image: AssetImage(windAssets[windAnimation.value.round()]),
-            //         ),
-            //       ),
-            //       height: 350.0,
-            //     ),
-            //     Container(
-            //       height: 350.0,
-            //       decoration: BoxDecoration(
-            //         color: Colors.white,
-            //         gradient: LinearGradient(
-            //           begin: FractionalOffset.topCenter,
-            //           end: FractionalOffset.bottomCenter,
-            //           colors: [
-            //             Colors.grey,
-            //             Colors.black,
-            //           ],
-            //           stops: [0.0,1.0]
-            //           )
-            //         ),
-            //       )
-            //     ]
-            //   );
+            );
           },
         )
       )

@@ -21,7 +21,8 @@ class _GameState extends State<Game>
         stream: scoreBloc.scoreStream,
         initialData: 0.0,
         builder: (context, AsyncSnapshot<double> snapshot) => PageView.builder(
-          physics: snapshot.data==0.0 ? BouncingScrollPhysics() : NeverScrollableScrollPhysics() ,
+          physics: (snapshot.data==0.0 || snapshot.data>=600) ? 
+            BouncingScrollPhysics() : NeverScrollableScrollPhysics() ,
           itemCount: 100,
           itemBuilder: (context, index){
             return _buildLevel(index+1);

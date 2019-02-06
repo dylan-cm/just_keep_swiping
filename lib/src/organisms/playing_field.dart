@@ -50,8 +50,14 @@ class _PlayingFieldState extends State<PlayingField>{
   Widget build(BuildContext context) {
     final scoreBloc = BlocProvider.of<ScoreBloc>(context);
     Size size = MediaQuery.of(context).size;
-
-    return GestureDetector(
+    if(scoreBloc.highScore(widget.level)>=600) return Stack(
+      alignment: AlignmentDirectional.center,
+      children: <Widget>[
+        Background(size: size, level: widget.level,),
+        ScoreDisplay(scoreBloc.highScore(widget.level), falling: false, level: widget.level)
+      ],
+    );
+    else return GestureDetector(
       onVerticalDragStart:(details) => _placeFinger(details),
       onVerticalDragUpdate: (details) => _onDrag(scoreBloc, details),
       onVerticalDragEnd: (details) => _liftFinger(details),
@@ -68,10 +74,10 @@ class _PlayingFieldState extends State<PlayingField>{
                 //Don't wait for animation to end to update score to 0
                 //to avoid jank with sliding to next level
                 score *= scoreReducer.value;
-                return ScoreDisplay(score, falling: falling,);
+                return ScoreDisplay(score, falling: falling, level: widget.level,);
               }
             ),
-            Wind(size, widget.ticker, widget.level),
+            Wind(size, widget.ticker, widget.level, score)
           ],
         ),
       ),
@@ -87,14 +93,17 @@ class _PlayingFieldState extends State<PlayingField>{
 
   void _onDrag(ScoreBloc scoreBloc, DragUpdateDetails details){ //TODO: move logic into BLOC?
     scoreBloc.setScore(score);
-
-    double punishment = score + details.delta.dy;
-    double newScore = score + _applyDifficulty(details.delta.dy);
-    if(newScore >= score) setState(() => score = newScore);
-    else if(punishment >= 0) setState(()=> score = punishment);
-    else setState(()=> score = 0);
-
+    if(score >= 600) _youWin();
+    else{
+      double punishment = score + details.delta.dy;
+      double newScore = score + _applyDifficulty(details.delta.dy);
+      if(newScore >= score) setState(() => score = newScore);
+      else if(punishment >= 0) setState(()=> score = punishment);
+      else setState(()=> score = 0);
+    }
     if(score > highScore) scoreBloc.setHighScore(widget.level, score);
+
+    
   }
 
   double _applyDifficulty(double dy){
@@ -104,8 +113,14 @@ class _PlayingFieldState extends State<PlayingField>{
   }
 
   void _youLose(){
-    setState(()=>falling=true);
-    scoreReducerController.forward();
+    if(score < 600){
+      setState(()=>falling=true);
+      scoreReducerController.forward();
+    }
     //TODO: Store highScore to db
+  }
+
+  void _youWin(){
+    scoreReducerController.stop();
   }
 }
